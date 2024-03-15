@@ -139,6 +139,13 @@ config ARCH_BOARD_DK_TM4C129X
 		Tiva DK-TM4C129x Connected Development Kit featuring the
 		TM4C129XNCZAD MCU.
 
+config ARCH_BOARD_DOUBLECAN
+	bool "STM32F105 Development board Featuring 2 CANs"
+	depends on ARCH_CHIP_STM32F105RB
+	select ARCH_HAVE_LEDS
+	select ARCH_HAVE_BUTTONS
+	select ARCH_HAVE_IRQBUTTONS
+
 config ARCH_BOARD_EA3131
 	bool "Embedded Artists EA3131 Development board"
 	depends on ARCH_CHIP_LPC3131
@@ -314,7 +321,7 @@ config ARCH_BOARD_ESP32_2432S028
 	depends on ARCH_CHIP_ESP32WROVER
 	---help---
 	ESP32-2432S028 is an ESP32 board with LCD Display, LED RGB and SD Cards.
-	
+
 config ARCH_BOARD_LILYGO_TBEAM_LORA_GPS
 	bool "LilyGO TBeam V1.1 LoRa/GPS"
 	depends on ARCH_CHIP_ESP32WROOM32
@@ -3107,6 +3114,7 @@ config ARCH_BOARD
 	default "cloudctrl"                 if ARCH_BOARD_CLOUDCTRL
 	default "demo9s12ne64"              if ARCH_BOARD_DEMOS92S12NEC64
 	default "dk-tm4c129x"               if ARCH_BOARD_DK_TM4C129X
+	default "doublecan"					if ARCH_BOARD_DOUBLECAN
 	default "ea3131"                    if ARCH_BOARD_EA3131
 	default "ea3152"                    if ARCH_BOARD_EA3152
 	default "eagle100"                  if ARCH_BOARD_EAGLE100
@@ -3724,6 +3732,9 @@ source "boards/arm/nrf52/arduino-nano-33ble-rev2/Kconfig"
 endif
 if ARCH_BOARD_CIRCUIT_EXPRESS
 source "boards/arm/samd2l2/circuit-express/Kconfig"
+endif
+if ARCH_BOARD_DOUBLECAN
+source "boards/arm/stm32/doublecan/Kconfig"
 endif
 if ARCH_BOARD_FLIPNCLICK_SAM3X
 source "boards/arm/sam34/flipnclick-sam3x/Kconfig"
