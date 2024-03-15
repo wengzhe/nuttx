@@ -220,5 +220,17 @@ int board_usbmsc_initialize(int port);
 int stm32_can_setup(void);
 #endif
 
+/****************************************************************************
+ * Name: stm32_cansock_setup
+ *
+ * Description:
+ *  Initialize CAN and register the CAN SOCKET device
+ *
+ ****************************************************************************/
+
+#ifdef CONFIG_STM32_CAN_SOCKET
+int stm32_cansock_setup(void);
+#endif
+
 #endif /* __ASSEMBLY__ */
 #endif /* __BOARDS_ARM_STM32_DOUBLECAN_SRC_DOUBLECAN_H */
