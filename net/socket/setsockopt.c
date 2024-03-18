@@ -289,12 +289,12 @@ int psock_setsockopt(FAR struct socket *psock, int level, int option,
 {
   int ret = -ENOPROTOOPT;
 
-  /* Verify that the socket option if valid (but might not be supported ) */
+  // /* Verify that the socket option if valid (but might not be supported ) */
 
-  if (!value)
-    {
-      return -EFAULT;
-    }
+  // if (!value)
+  //   {
+  //     return -EFAULT;
+  //   }
 
   /* Verify that the sockfd corresponds to valid, allocated socket */
 
