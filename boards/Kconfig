@@ -2525,6 +2525,17 @@ config ARCH_BOARD_STEVAL_ETH001V1
 		The STMicro STEVAL-ETH001V1 servo drive evaluation board featuring
 		the STM32F767ZI MCU.
 
+config ARCH_BOARD_STM32ER_F103RC
+	bool "STM32er F103RC board"
+	depends on ARCH_CHIP_STM32F103RC
+	select ARCH_HAVE_LEDS
+	select ARCH_HAVE_BUTTONS
+	select ARCH_HAVE_IRQBUTTONS
+	---help---
+		This port uses the STM32er F103RC board and a GNU arm-nuttx-elf
+		toolchain under Linux or Cygwin. See the http://stm32er.com/?id=4 for
+		further information. This board features the STMicro STM32F103RCT6 MCU.
+
 config ARCH_BOARD_STM32H747I_DISCO
 	bool "STMicro STM32H747I-DISCO board"
 	depends on ARCH_CHIP_STM32H747XI
@@ -3355,6 +3366,7 @@ config ARCH_BOARD
 	default "stm32f746g-disco"          if ARCH_BOARD_STM32F746G_DISCO
 	default "stm32f769i-disco"          if ARCH_BOARD_STM32F769I_DISCO
 	default "steval-eth001v1"           if ARCH_BOARD_STEVAL_ETH001V1
+	default "stm32er-f103rc" 			if ARCH_BOARD_STM32ER_F103RC
 	default "stm32h747i-disco"          if ARCH_BOARD_STM32H747I_DISCO
 	default "stm32f746-ws"              if ARCH_BOARD_STM32F746_WS
 	default "stm32f777zit6-meadow"      if ARCH_BOARD_MEADOW_F7MICRO
