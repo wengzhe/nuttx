@@ -2536,6 +2536,17 @@ config ARCH_BOARD_STM32ER_F103RC
 		toolchain under Linux or Cygwin. See the http://stm32er.com/?id=4 for
 		further information. This board features the STMicro STM32F103RCT6 MCU.
 
+config ARCH_BOARD_STM32ER_F407VE
+	bool "STM32er F407VE board"
+	depends on ARCH_CHIP_STM32F407VE
+	select ARCH_HAVE_LEDS
+	select ARCH_HAVE_BUTTONS
+	select ARCH_HAVE_IRQBUTTONS
+	---help---
+		This port uses the STM32er F407VE board and a GNU arm-nuttx-elf
+		toolchain under Linux or Cygwin. See the http://stm32er.com/?id=13 for
+		further information. This board features the STMicro STM32F407VET6 MCU.
+
 config ARCH_BOARD_STM32H747I_DISCO
 	bool "STMicro STM32H747I-DISCO board"
 	depends on ARCH_CHIP_STM32H747XI
@@ -3367,6 +3378,7 @@ config ARCH_BOARD
 	default "stm32f769i-disco"          if ARCH_BOARD_STM32F769I_DISCO
 	default "steval-eth001v1"           if ARCH_BOARD_STEVAL_ETH001V1
 	default "stm32er-f103rc" 			if ARCH_BOARD_STM32ER_F103RC
+	default "stm32er-f407ve" 			if ARCH_BOARD_STM32ER_F407VE
 	default "stm32h747i-disco"          if ARCH_BOARD_STM32H747I_DISCO
 	default "stm32f746-ws"              if ARCH_BOARD_STM32F746_WS
 	default "stm32f777zit6-meadow"      if ARCH_BOARD_MEADOW_F7MICRO
@@ -3867,6 +3879,12 @@ source "boards/arm/stm32f7/stm32f769i-disco/Kconfig"
 endif
 if ARCH_BOARD_STEVAL_ETH001V1
 source "boards/arm/stm32f7/steval-eth001v1/Kconfig"
+endif
+if ARCH_BOARD_STM32ER_F103RC
+source "boards/arm/stm32/stm32er-f103rc/Kconfig"
+endif
+if ARCH_BOARD_STM32ER_F407VE
+source "boards/arm/stm32/stm32er-f407ve/Kconfig"
 endif
 if ARCH_BOARD_STM32H747I_DISCO
 source "boards/arm/stm32h7/stm32h747i-disco/Kconfig"
