@@ -116,8 +116,10 @@ struct stm32_can_s
   bool                bifup;  /* true:ifup false:ifdown */
   struct net_driver_s dev;    /* Interface understood by the network */
 
-  struct work_s irqwork;  /* For deferring interrupt work to the wq */
-  struct work_s pollwork; /* For deferring poll work to the work wq */
+  struct work_s rx0work;  /* For deferring interrupt work to the wq */
+  struct work_s rx1work;  /* For deferring interrupt work to the wq */
+  struct work_s txwork;   /* For deferring interrupt work to the wq */
+  struct work_s scework;  /* For deferring interrupt work to the wq */
 
   /* A pointers to the list of TX/RX descriptors */
 
@@ -866,7 +868,7 @@ static int stm32can_transmit(struct stm32_can_s *priv)
     }
   else
     {
-      canerr("ERROR: No available mailbox\n");
+      nerr("ERROR: No available mailbox\n");
       return -EBUSY;
     }
 
@@ -1110,17 +1112,7 @@ static int stm32can_txavail(struct net_driver_s *dev)
 {
   struct stm32_can_s *priv = (struct stm32_can_s *)dev->d_private;
 
-  /* Is our single work structure available?  It may not be if there are
-   * pending interrupt actions and we will have to ignore the Tx
-   * availability action.
-   */
-
-  if (work_available(&priv->pollwork))
-    {
-      /* Schedule to serialize the poll on the worker thread. */
-
-      stm32can_txavail_work(priv);
-    }
+  stm32can_txavail_work(priv);
 
   return OK;
 }
@@ -1346,13 +1338,13 @@ static int stm32can_rxinterrupt(struct stm32_can_s *priv, int rxmb)
   if (rxmb == 0)
     {
       stm32can_rx0int(priv, false);
-      work_queue(CANWORK, &priv->irqwork,
+      work_queue(CANWORK, &priv->rx0work,
                  stm32can_rx0interrupt_work, priv, 0);
     }
   else if (rxmb == 1)
     {
       stm32can_rx1int(priv, false);
-      work_queue(CANWORK, &priv->irqwork,
+      work_queue(CANWORK, &priv->rx1work,
                  stm32can_rx1interrupt_work, priv, 0);
     }
   else
@@ -1448,7 +1440,7 @@ static int stm32can_txinterrupt(int irq, void *context, void *arg)
        */
 
       stm32can_txint(priv, false);
-      work_queue(CANWORK, &priv->irqwork, stm32can_txdone_work, priv, 0);
+      work_queue(CANWORK, &priv->txwork, stm32can_txdone_work, priv, 0);
     }
 
   /* Check for RQCP1: Request completed mailbox 1 */
@@ -1468,7 +1460,7 @@ static int stm32can_txinterrupt(int irq, void *context, void *arg)
        */
 
       stm32can_txint(priv, false);
-      work_queue(CANWORK, &priv->irqwork, stm32can_txdone_work, priv, 0);
+      work_queue(CANWORK, &priv->txwork, stm32can_txdone_work, priv, 0);
     }
 
   /* Check for RQCP2: Request completed mailbox 2 */
@@ -1486,7 +1478,7 @@ static int stm32can_txinterrupt(int irq, void *context, void *arg)
        */
 
       stm32can_txint(priv, false);
-      work_queue(CANWORK, &priv->irqwork, stm32can_txdone_work, priv, 0);
+      work_queue(CANWORK, &priv->txwork, stm32can_txdone_work, priv, 0);
     }
 
   return OK;
@@ -1507,7 +1499,11 @@ static void stm32can_txdone_work(void *arg)
    */
 
   net_lock();
-  devif_poll(&priv->dev, stm32can_txpoll);
+  if (stm32can_txready(priv))
+    {
+      devif_poll(&priv->dev, stm32can_txpoll);
+    }
+
   net_unlock();
 }
 
@@ -1657,7 +1653,7 @@ static void stm32can_sceinterrupt_work(void *arg)
 
   if (errbits != 0)
     {
-      canerr("ERROR: errbits = %08" PRIx16 "\n", errbits);
+      nerr("ERROR: errbits = %08" PRIx16 "\n", errbits);
 
       /* Copy frame */
 
@@ -1721,7 +1717,7 @@ static int stm32can_sceinterrupt(int irq, void *context, void *arg)
    */
 
   stm32can_errint(priv, false);
-  work_queue(CANWORK, &priv->irqwork,
+  work_queue(CANWORK, &priv->scework,
              stm32can_sceinterrupt_work, priv, 0);
 
   return OK;

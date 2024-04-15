@@ -1,2 +1,0 @@
-ifup can0
-canopend -d can0 -i 1 -c "local-/tmp/CO_command_socket" &

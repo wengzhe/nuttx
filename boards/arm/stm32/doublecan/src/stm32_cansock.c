@@ -28,7 +28,7 @@
 
 #include "stm32_can.h"
 
-#ifdef CONFIG_CAN
+#ifdef CONFIG_STM32_CAN_SOCKET
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -85,4 +85,4 @@ int stm32_cansock_setup(void)
 #endif
 }
 
-#endif /* CONFIG_CAN */
+#endif /* CONFIG_STM32_CAN_SOCKET */
