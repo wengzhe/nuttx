@@ -8,7 +8,6 @@ menu "TCP/IP Networking"
 config NET_TCP
 	bool "TCP/IP Networking"
 	default n
-	select NET_READAHEAD if !NET_TCP_NO_STACK
 	---help---
 		Enable or disable TCP networking support.
 

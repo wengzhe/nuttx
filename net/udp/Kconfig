@@ -8,7 +8,6 @@ menu "UDP Networking"
 config NET_UDP
 	bool "UDP Networking"
 	default n
-	select NET_READAHEAD if !NET_UDP_NO_STACK
 	depends on NET
 	---help---
 		Enable or disable UDP networking support.
